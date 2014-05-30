@@ -9,10 +9,13 @@
     <!--Permite usar entre otras la anotación @Autowired -->
     <context:annotation-config/>
     <!--Permite usar entre otras las anotaciones @Component y @Controller -->
-    <context:component-scan base-package="com.pymegest.applicationserver.domain"/>
+    <context:component-scan base-package="com.lightlowcost.server.domain"/>
  
  
-    <bean class="com.pymegest.persistence.hibernate.HibernateUtil" factory-method="getSessionFactory"  />
-    <!--<bean class="com.pymegest.applicationserver.dao.impl.hibernate.UsuarioDAOImplHibernate" /> -->
+    <bean class="com.lightlowcost.persistence.hibernate.HibernateUtil" factory-method="getSessionFactory"  />
+    <bean class="com.lightlowcost.server.dao.impl.hibernate.NormalRateDAOImplHibernate" />
+    <bean class="com.lightlowcost.server.dao.impl.hibernate.CarRateDAOImplHibernate" />
+    <bean class="com.lightlowcost.server.dao.impl.hibernate.NightRateDAOImplHibernate" />
+    <bean class="com.lightlowcost.server.dao.impl.hibernate.ValuesDayDAOImplHibernate" />
     
 </beans>

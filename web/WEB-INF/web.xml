@@ -11,12 +11,12 @@
     </session-config>
     
     <listener>
-        <listener-class>com.pymegest.persistence.hibernate.HibernateContextListenerAndFilter</listener-class>
+        <listener-class>com.lightlowcost.persistence.hibernate.HibernateContextListenerAndFilter</listener-class>
     </listener>
     
     <filter>
         <filter-name>HibernateContextListenerAndFilter</filter-name>
-        <filter-class>com.pymegest.persistence.hibernate.HibernateContextListenerAndFilter</filter-class>
+        <filter-class>com.lightlowcost.persistence.hibernate.HibernateContextListenerAndFilter</filter-class>
     </filter>
     
     <filter-mapping>

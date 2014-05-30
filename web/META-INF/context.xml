@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/LightLowCost">
-<Resource name="jdbc/light_low_cost" 
+<Context antiJARLocking="true" path="/lightlowcost" >
+    <Resource name="jdbc/lightlowcost" 
           auth="Container"
           type="javax.sql.DataSource" 
-          driverClassName="com.mysql.jdbc.Driver"
-          url="jdbc:mysql://localhost:3306/light_low_cost"
+          driverClassName="com.mysql.jdbc.Driver" 
+          url="jdbc:mysql://localhost:3306/lightlowcost"
           username="root" 
-          password="" 
-          maxActive="100"
+          password=""           
+          maxActive="50"
           maxIdle="30"
           maxWait="10000"
+          testOnBorrow = "true"       
           validationQuery="SELECT 1 FROM dual" 
           factory = "org.apache.tomcat.jdbc.pool.DataSourceFactory"  />
 </Context>

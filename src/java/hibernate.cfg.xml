@@ -5,6 +5,9 @@
     <property name="connection.datasource">java:/comp/env/jdbc/lightlowcost</property>
     <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
     <property name="hibernate.show_sql">true</property>
-    <!--<mapping class="com.pymegest.applicationserver.domain.Usuario"/>-->
+    <mapping class="com.lightlowcost.server.domain.CarRate"/>
+    <mapping class="com.lightlowcost.server.domain.NightRate"/>
+    <mapping class="com.lightlowcost.server.domain.NormalRate"/>
+    <mapping class="com.lightlowcost.server.domain.ValuesDay"/>
   </session-factory>
 </hibernate-configuration>
