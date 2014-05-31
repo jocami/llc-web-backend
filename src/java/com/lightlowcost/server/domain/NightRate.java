@@ -26,6 +26,7 @@
  */
 package com.lightlowcost.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,6 +49,7 @@ public class NightRate implements Serializable{
     /*
      * PROPERTIES
      */
+    @JsonIgnore
     @Id
     @Column(name = "id_nightRate")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +61,7 @@ public class NightRate implements Serializable{
     @Column(name = "value")
     private Double value;
     
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="id_day")
     private ValuesDay day;

@@ -28,33 +28,14 @@
 package com.lightlowcost.server.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.lightlowcost.server.dao.ValuesDayDAO;
-import com.lightlowcost.server.domain.CarRate;
-import com.lightlowcost.server.domain.NightRate;
-import com.lightlowcost.server.domain.NormalRate;
 import com.lightlowcost.server.domain.ValuesDay;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -70,11 +51,11 @@ public class ValuesDayController {
     ValuesDayDAO valuesDayDAO;
     
      @RequestMapping(value = {"/valuesDay/{fecha}"}, method = RequestMethod.GET)
-    public void update(HttpServletRequest request, HttpServletResponse response, @PathVariable("fecha")String fechaStr) {
+    public void get(HttpServletRequest request, HttpServletResponse response, @PathVariable("fecha")String fechaStr) {
 
         try {
             int dateInt = Integer.parseInt(fechaStr);
-            ValuesDay valuesDayRead = valuesDayDAO.read(dateInt);
+            ValuesDay valuesDayRead = valuesDayDAO.findById(dateInt);
 
             if (valuesDayRead != null) {
 

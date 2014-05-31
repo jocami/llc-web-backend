@@ -27,6 +27,7 @@
 
 package com.lightlowcost.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -48,6 +49,7 @@ public class NormalRate implements Serializable{
     /*
      * PROPERTIES
      */
+    @JsonIgnore
     @Id
     @Column(name = "id_normalRate")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +61,7 @@ public class NormalRate implements Serializable{
     @Column(name = "value")
     private Double value;
     
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="id_day")
     private ValuesDay day;
@@ -68,12 +71,6 @@ public class NormalRate implements Serializable{
     public NormalRate() {
     }
 
-    /*
-     * CONSTRUCTOR OVERLOADED
-     */
-    public NormalRate(Integer id_normalRate) {
-        this.id_normalRate = id_normalRate;
-    }
     
     /**
      * ********************

@@ -43,6 +43,6 @@ public interface ValuesDayDAO extends GenericDAO<ValuesDay, Integer>{
      * @param fecha
      * @return
      */
-    public List<ValuesDay> findByName(String fecha);
+    public ValuesDay findById(int fecha);
 
 }

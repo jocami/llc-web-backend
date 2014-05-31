@@ -26,6 +26,7 @@
  */
 package com.lightlowcost.server.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,6 +48,7 @@ public class CarRate implements Serializable{
     /*
      * PROPERTIES
      */
+    @JsonIgnore
     @Id
     @Column(name = "id_carRate")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,6 +60,7 @@ public class CarRate implements Serializable{
     @Column(name = "value")
     private Double value;
     
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name="id_day")
     private ValuesDay day;

@@ -29,6 +29,9 @@ package com.lightlowcost.server.dao.impl.hibernate;
 
 import com.lightlowcost.persistence.dao.impl.GenericDAOImplHibernate;
 import com.lightlowcost.server.dao.ValuesDayDAO;
+import com.lightlowcost.server.domain.CarRate;
+import com.lightlowcost.server.domain.NightRate;
+import com.lightlowcost.server.domain.NormalRate;
 import com.lightlowcost.server.domain.ValuesDay;
 import java.util.List;
 import org.hibernate.Query;
@@ -41,15 +44,15 @@ import org.hibernate.Session;
 */
 public class ValuesDayDAOImplHibernate extends GenericDAOImplHibernate<ValuesDay, Integer> implements ValuesDayDAO{
     @Override
-    public List<ValuesDay> findByName(String fecha) {
+    public ValuesDay findById(int fecha) {
         
-        if (fecha == null) {
+        if (fecha == 0) {
 
             Session session = sessionFactory.getCurrentSession();
 
             Query query = session.createQuery("SELECT valuesday FROM ValuesDay valuesday");
 
-            List<ValuesDay> valuesDay = query.list();
+            ValuesDay valuesDay = (ValuesDay) query.uniqueResult();
 
             return valuesDay;
 
@@ -57,12 +60,12 @@ public class ValuesDayDAOImplHibernate extends GenericDAOImplHibernate<ValuesDay
 
             Session session = sessionFactory.getCurrentSession();
 
-            Query query = session.createQuery("SELECT valuesday FROM ValuesDay valuesday WHERE id_day LIKE ?");
-
-            query.setString(0,fecha);
-
-            List<ValuesDay> valuesDay = query.list();
-
+            Query query = session.createQuery("SELECT valuesday FROM ValuesDay valuesday  WHERE id_valuesday = ?");
+            
+            query.setInteger(0,fecha);
+            
+            ValuesDay valuesDay = (ValuesDay) query.uniqueResult();
+            
             return valuesDay;
             
         }

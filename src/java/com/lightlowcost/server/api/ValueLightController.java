@@ -14,8 +14,6 @@ import com.lightlowcost.server.domain.CarRate;
 import com.lightlowcost.server.domain.NightRate;
 import com.lightlowcost.server.domain.NormalRate;
 import com.lightlowcost.server.domain.ValuesDay;
-import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -25,18 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import jxl.*;
 import jxl.read.biff.BiffException;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -76,8 +71,10 @@ public class ValueLightController {
              Workbook workbook = Workbook.getWorkbook(new File("C:/Users/Carlos/Desktop/Pruebas/excelDay.xls"));
              Sheet sheet = workbook.getSheet(0);
              ValuesDay day = new ValuesDay();
-             day.setId_day(date);
-             valuesDayDAO.insert(day);
+             day.setId_valuesday(date);
+             List<NormalRate> normals = new ArrayList();
+             List<CarRate> cars = new ArrayList();
+             List<NightRate> nights = new ArrayList();
              
              for(int i=5;i<29;i++){
                 NormalRate normal = new NormalRate();
@@ -86,6 +83,7 @@ public class ValueLightController {
                 Cell normalCell = sheet.getCell(4,i);
                 String val = normalCell.getContents();
                 normal.setValue(parseInt(val));
+                normals.add(normal);
                 normalRateDAO.insert(normal);       
              }
              for(int i=29;i<53;i++){
@@ -95,6 +93,7 @@ public class ValueLightController {
                 Cell nightCell = sheet.getCell(4,i);
                 String val = nightCell.getContents();
                 night.setValue(parseInt(val));
+                nights.add(night);
                 nightRateDAO.insert(night);       
              }
              for(int i=53;i<77;i++){
@@ -104,8 +103,13 @@ public class ValueLightController {
                 Cell carCell = sheet.getCell(4,i);
                 String val = carCell.getContents();
                 car.setValue(parseInt(val));
+                cars.add(car);
                 carRateDAO.insert(car);       
-             }        
+             }
+             day.setCarRate(cars);
+             day.setNightRate(nights);
+             day.setNormalRate(normals);
+             valuesDayDAO.insert(day);
              workbook.close();
          } catch (IOException ex) {
              Logger.getLogger(ValueLightController.class.getName()).log(Level.SEVERE, null, ex);

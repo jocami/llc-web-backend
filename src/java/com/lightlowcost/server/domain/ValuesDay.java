@@ -53,22 +53,19 @@ public class ValuesDay implements Serializable{
      * PROPERTIES
      */
     @Id
-    @Column(name="id_day")
-    private Integer id_day;
+    @Column(name="id_valuesday")
+    private Integer id_valuesday;
     
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_day")
     @IndexColumn(name = "idx")
     private List<NormalRate> normalRate = new ArrayList();
     
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_day")
     @IndexColumn(name = "idx")    
-    private List<NightRate> nightRate = new ArrayList();
+    private List<NightRate> nightRate = new ArrayList();    
     
-    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_day")
     @IndexColumn(name = "idx")
@@ -83,19 +80,19 @@ public class ValuesDay implements Serializable{
     /**
      * GETTERS AND SETTERS
      */
-    public Integer getId_day() {
-        return id_day;
+    public Integer getId_valuesday() {
+        return id_valuesday;
     }
 
-    public void setId_day(Integer id_day) {
-        this.id_day = id_day;
+    public void setId_valuesday(Integer id_valuesday) {
+        this.id_valuesday = id_valuesday;
     }
 
     public List<NormalRate> getNormalRate() {
         return normalRate;
     }
 
-    public void setDayRate(List<NormalRate> normalRate) {
+    public void setNormalRate(List<NormalRate> normalRate) {
         this.normalRate = normalRate;
     }
 
