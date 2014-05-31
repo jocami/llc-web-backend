@@ -29,11 +29,7 @@ package com.lightlowcost.server.dao.impl.hibernate;
 
 import com.lightlowcost.persistence.dao.impl.GenericDAOImplHibernate;
 import com.lightlowcost.server.dao.ValuesDayDAO;
-import com.lightlowcost.server.domain.CarRate;
-import com.lightlowcost.server.domain.NightRate;
-import com.lightlowcost.server.domain.NormalRate;
 import com.lightlowcost.server.domain.ValuesDay;
-import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 

@@ -58,16 +58,16 @@ public class ValueLightController {
      @RequestMapping(value = {"/valueLight/{fecha}"}, method = RequestMethod.GET)
     public void valueLight(HttpServletRequest request, HttpServletResponse response,@PathVariable("fecha") String fechaStr) {
         
-        
         int date;
         String hours[] = {"00:00-01:00","01:00-02:00","02:00-03:00","03:00-04:00","04:00-05:00","05:00-06:00",
             "06:00-07:00","07:00-08:00","08:00-09:00","09:00-10:00","10:00-11:00","11:00-12:00","12:00-13:00",
             "13:00-14:00","14:00-15:00","15:00-16:00","16:00-17:00","17:00-18:00","18:00-19:00","19:00-20:00",
             "20:00-21:00","21:00-22:00","22:00-23:00","23:00-00:00"};
-        
+        date = Integer.parseInt(fechaStr);
+        ValuesDay valuesDay = valuesDayDAO.findById(date);
         try {
+             if(valuesDay==null){ 
              downloadExcel(fechaStr);//Formato yyyymmdd
-             date = parseDate(fechaStr);
              Workbook workbook = Workbook.getWorkbook(new File("C:/Users/Carlos/Desktop/Pruebas/excelDay.xls"));
              Sheet sheet = workbook.getSheet(0);
              ValuesDay day = new ValuesDay();
@@ -104,20 +104,47 @@ public class ValueLightController {
                 String val = carCell.getContents();
                 car.setValue(parseInt(val));
                 cars.add(car);
-                carRateDAO.insert(car);       
+                carRateDAO.insert(car);                
              }
              day.setCarRate(cars);
              day.setNightRate(nights);
              day.setNormalRate(normals);
              valuesDayDAO.insert(day);
              workbook.close();
+             
+             response.setStatus(HttpServletResponse.SC_OK);
+             response.setContentType("application/json; chaset=UTF-8");
+             response.getWriter().println("Values save like id-valueday = " + String.valueOf(date));
+          }
+        else{
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setContentType("application/json; chaset=UTF-8");
+                response.getWriter().println("Already exists id-valueday = " + String.valueOf(date));
+        
+        }    
          } catch (IOException ex) {
-             Logger.getLogger(ValueLightController.class.getName()).log(Level.SEVERE, null, ex);
-         } catch (BiffException ex) {
-             Logger.getLogger(ValueLightController.class.getName()).log(Level.SEVERE, null, ex);
-         }
-    }
+            Logger.getLogger(ValueLightController.class.getName()).log(Level.SEVERE, null, ex);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("text/plain; charset=UTF-8;");
+            try {
 
+                ex.printStackTrace(response.getWriter());
+
+            } catch (IOException ex1) {
+            }
+         } catch (BiffException ex) {
+            Logger.getLogger(ValueLightController.class.getName()).log(Level.SEVERE, null, ex);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("text/plain; charset=UTF-8;");
+            try {
+
+                ex.printStackTrace(response.getWriter());
+
+            } catch (IOException ex1) {
+            }
+         }
+   
+    }
 
 
     private Double parseInt(String val) {

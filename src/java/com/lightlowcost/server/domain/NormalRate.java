@@ -24,7 +24,6 @@
 * You should have received a copy of the GNU General Public License
 * along with Jocami. If not, see <http://www.gnu.org/licenses/>.
 */
-
 package com.lightlowcost.server.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -46,6 +45,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "normalrate")
 public class NormalRate implements Serializable{
+    
     /*
      * PROPERTIES
      */
@@ -70,18 +70,24 @@ public class NormalRate implements Serializable{
      */
     public NormalRate() {
     }
-
+    
+    /*
+     * CONSTRUCTOR OVERLOADED
+     */
+    public NormalRate(Integer id_normalRate) {
+        this.id_normalRate = id_normalRate;
+    }
     
     /**
      * ********************
      * GETTERS AND SETTERS
      *********************
      */
-    public Integer getId_NormalRate() {
+    public Integer getId_normalRate() {
         return id_normalRate;
     }
 
-    public void setId_NormalRate(Integer id_normalRate) {
+    public void setId_normalRate(Integer id_normalRate) {
         this.id_normalRate = id_normalRate;
     }
 

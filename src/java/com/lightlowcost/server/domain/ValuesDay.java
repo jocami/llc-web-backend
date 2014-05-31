@@ -58,13 +58,13 @@ public class ValuesDay implements Serializable{
     
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_day")
-    @IndexColumn(name = "idx")
-    private List<NormalRate> normalRate = new ArrayList();
+    @IndexColumn(name = "idx")    
+    private List<NightRate> nightRate = new ArrayList();    
     
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_day")
-    @IndexColumn(name = "idx")    
-    private List<NightRate> nightRate = new ArrayList();    
+    @IndexColumn(name = "idx")
+    private List<NormalRate> normalRate = new ArrayList();
     
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_day")
