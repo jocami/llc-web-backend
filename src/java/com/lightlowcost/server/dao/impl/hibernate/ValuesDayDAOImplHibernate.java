@@ -30,6 +30,9 @@ package com.lightlowcost.server.dao.impl.hibernate;
 import com.lightlowcost.persistence.dao.impl.GenericDAOImplHibernate;
 import com.lightlowcost.server.dao.ValuesDayDAO;
 import com.lightlowcost.server.domain.ValuesDay;
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
 * @author JOCAMI
@@ -37,24 +40,32 @@ import com.lightlowcost.server.domain.ValuesDay;
 * @since 1.0
 */
 public class ValuesDayDAOImplHibernate extends GenericDAOImplHibernate<ValuesDay, Integer> implements ValuesDayDAO{
+    @Override
+    public List<ValuesDay> findByName(String fecha) {
+        
+        if (fecha == null) {
 
-   /*
-    * PROPERTIES
-    */
+            Session session = sessionFactory.getCurrentSession();
 
-   
-   /*
-    * CONSTRUCTOR EMPTY
-    */
-   
+            Query query = session.createQuery("SELECT valuesday FROM ValuesDay valuesday");
 
-   /*
-    * CONSTRUCTOR OVERLOADED
-    */
-   
-   
-   /**********************
-    * GETTERS AND SETTERS
-    **********************/
+            List<ValuesDay> valuesDay = query.list();
+
+            return valuesDay;
+
+        } else {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Query query = session.createQuery("SELECT valuesday FROM ValuesDay valuesday WHERE id_day LIKE ?");
+
+            query.setString(0,fecha);
+
+            List<ValuesDay> valuesDay = query.list();
+
+            return valuesDay;
+            
+        }
+    }
 
 }

@@ -1,7 +1,7 @@
 /*
 * Project: LightLowCost
-* Package: com.lightlowcost.server.domain
-* File: Pair.java
+* Package: com.lightlowcost.server.api
+* File: CarRateController.java
 * Date: 30-may-2014
 * Encoding: UTF-8
 * License: default
@@ -25,47 +25,13 @@
 * along with Jocami. If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.lightlowcost.server.domain;
+package com.lightlowcost.server.api;
 
 /**
 * @author JOCAMI
 * @version 1.0
 * @since 1.0
 */
-public class Pair {
-   /*
-    * PROPERTIES
-    */
-    private String hour;
-    private String value;
-    /*
-     * CONSTRUCTOR EMPTY
-     */
-    public Pair() {
-    }
-    /*
-     * CONSTRUCTOR OVERLOADED
-     */
-    public Pair(String hour, String value) {
-        this.hour = hour;
-        this.value = value;
-    }
-
-    public String getHour() {
-        return hour;
-    }
-
-    public void setHour(String hour) {
-        this.hour = hour;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
+public class CarRateController {
     
 }

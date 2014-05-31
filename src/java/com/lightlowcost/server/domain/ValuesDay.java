@@ -54,7 +54,6 @@ public class ValuesDay implements Serializable{
      */
     @Id
     @Column(name="id_day")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_day;
     
     @JsonIgnore

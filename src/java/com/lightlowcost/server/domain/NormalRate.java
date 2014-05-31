@@ -33,6 +33,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -47,34 +49,43 @@ public class NormalRate implements Serializable{
      * PROPERTIES
      */
     @Id
-    @Column(name = "id_dayRate")
+    @Column(name = "id_normalRate")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_dayRate;
+    private Integer id_normalRate;
     
     @Column(name = "hour")
     private String hour;
     
     @Column(name = "value")
-    private Integer value;
+    private Double value;
     
-    @Column(name = "id_day")
+    @ManyToOne
+    @JoinColumn(name="id_day")
     private ValuesDay day;
     /*
      * CONSTRUCTOR EMPTY
      */
     public NormalRate() {
     }
+
+    /*
+     * CONSTRUCTOR OVERLOADED
+     */
+    public NormalRate(Integer id_normalRate) {
+        this.id_normalRate = id_normalRate;
+    }
+    
     /**
      * ********************
      * GETTERS AND SETTERS
      *********************
      */
-    public Integer getId_DayRate() {
-        return id_dayRate;
+    public Integer getId_NormalRate() {
+        return id_normalRate;
     }
 
-    public void setId_DayRate(Integer id_dayRate) {
-        this.id_dayRate = id_dayRate;
+    public void setId_NormalRate(Integer id_normalRate) {
+        this.id_normalRate = id_normalRate;
     }
 
     public String getHour() {
@@ -85,11 +96,11 @@ public class NormalRate implements Serializable{
         this.hour = hour;
     }
 
-    public Integer getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 

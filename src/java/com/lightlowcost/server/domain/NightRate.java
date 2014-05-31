@@ -32,6 +32,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -55,15 +57,24 @@ public class NightRate implements Serializable{
     private String hour;
     
     @Column(name = "value")
-    private Integer value;
+    private Double value;
     
-    @Column(name = "id_day")
+    @ManyToOne
+    @JoinColumn(name="id_day")
     private ValuesDay day;
     /*
      * CONSTRUCTOR EMPTY
      */
     public NightRate() {
     }
+
+    /*
+     * CONSTRUCTOR OVERLOADED
+     */
+    public NightRate(Integer id_nightRate) {
+        this.id_nightRate = id_nightRate;
+    }
+    
     /**
      * ********************
      * GETTERS AND SETTERS
@@ -85,11 +96,11 @@ public class NightRate implements Serializable{
         this.hour = hour;
     }
 
-    public Integer getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 

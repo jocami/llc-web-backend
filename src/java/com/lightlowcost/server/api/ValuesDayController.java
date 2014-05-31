@@ -27,6 +27,13 @@
 
 package com.lightlowcost.server.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.lightlowcost.server.dao.ValuesDayDAO;
+import com.lightlowcost.server.domain.CarRate;
+import com.lightlowcost.server.domain.NightRate;
+import com.lightlowcost.server.domain.NormalRate;
+import com.lightlowcost.server.domain.ValuesDay;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +41,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +51,10 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -54,17 +65,39 @@ import org.springframework.web.bind.annotation.RequestMethod;
 */
 @Controller
 public class ValuesDayController {
-    @RequestMapping(value = {"/downloadxls/{fecha}"}, method = RequestMethod.GET)
-    public void valueLight(HttpServletRequest request, HttpServletResponse response, @PathVariable("fecha") String fechaStr) {
-        String excelFile;
+    
+    @Autowired
+    ValuesDayDAO valuesDayDAO;
+    
+     @RequestMapping(value = {"/valuesDay/{fecha}"}, method = RequestMethod.GET)
+    public void update(HttpServletRequest request, HttpServletResponse response, @PathVariable("fecha")String fechaStr) {
+
         try {
-            excelFile = downloadExcel(fechaStr);
-            //readExcel(excelFile);
-            
-        } catch (IOException ex) {
-            Logger.getLogger(ValuesDayController.class.getName()).log(Level.SEVERE, null, ex);
+            int dateInt = Integer.parseInt(fechaStr);
+            ValuesDay valuesDayRead = valuesDayDAO.read(dateInt);
+
+            if (valuesDayRead != null) {
+
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("application/json; chaset=UTF-8");
+                
+                ObjectMapper objectMapper = new ObjectMapper();
+                String jsonOutput = objectMapper.writeValueAsString(valuesDayRead);
+                response.getWriter().println(jsonOutput);
+                
+            }
+            else {
+                
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setContentType("application/json; chaset=UTF-8");
+                
+                //BussinesMessage mensaje = new BussinesMessage();
+                //mensaje.setMensaje("No se ha encontrado ningun empleado para actualizar.");
+            }
+
+        } catch (Exception ex) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.setContentType("text/plain; charset=UTF-8;");
+            response.setContentType("text/plain; charset=UTF-8");
             try {
 
                 ex.printStackTrace(response.getWriter());
@@ -72,64 +105,6 @@ public class ValuesDayController {
             } catch (IOException ex1) {
             }
         }
-    
-    }
-    
-    private String downloadExcel(String fechaStr) throws MalformedURLException, IOException{
-        URL url;
-        String dir = "C:/Users/Carlos/Desktop/Pruebas/"+fechaStr+".xls";
-
-			// get URL content
-			url = new URL("http://www.esios.ree.es/Solicitar?fileName=PVPC_DETALLE_DD_"+fechaStr+ "&fileType=xls&idioma=es");
-			URLConnection conn = url.openConnection();
-                        InputStream is = conn.getInputStream();
-
-                        // Fichero en el que queremos guardar el contenido
-                        
-                        File salida = new File(dir);
-                        FileOutputStream fos;
-    
-                        fos = new FileOutputStream(salida);
-    
-                        // buffer para ir leyendo.
-                        byte [] array = new byte[1000];
-
-                        // Primera lectura y bucle hasta el final
-                        int leido = is.read(array);
-                        while (leido > 0) {
-                           fos.write(array,0,leido);
-                           leido=is.read(array);
-                        }
-
-                        // Cierre de conexion y fichero.
-                        is.close();
-                        fos.close();
-                        return dir;                
-                }
-    @RequestMapping(value = {"/readexcel"}, method = RequestMethod.GET)
-    public void readExcel(){
-        String dir = "C:/Users/Carlos/Desktop/Pruebas/20140525.xls";
-        try {
-            Workbook workbook = Workbook.getWorkbook(new File(dir));
-            Sheet sheet = workbook.getSheet(0); 
-            
-            Cell a1 = sheet.getCell(4,5);
-            Cell b2 = sheet.getCell(4,6);
-            Cell c2 = sheet.getCell(0,5);
-            String stringa1 = a1.getContents();
-            String string2 = b2.getContents();
-            String string3 = c2.getContents();
-            System.out.println(stringa1);
-            System.out.println(string2);
-            System.out.println(string3);
-            workbook.close();
-        } catch (IOException ex) {
-            Logger.getLogger(ValuesDayController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (BiffException ex) {
-            Logger.getLogger(ValuesDayController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    
-    
     }
 }
 

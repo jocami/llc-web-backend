@@ -6,6 +6,14 @@
 
 package com.lightlowcost.server.api;
 
+import com.lightlowcost.server.dao.CarRateDAO;
+import com.lightlowcost.server.dao.NightRateDAO;
+import com.lightlowcost.server.dao.NormalRateDAO;
+import com.lightlowcost.server.dao.ValuesDayDAO;
+import com.lightlowcost.server.domain.CarRate;
+import com.lightlowcost.server.domain.NightRate;
+import com.lightlowcost.server.domain.NormalRate;
+import com.lightlowcost.server.domain.ValuesDay;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -29,6 +37,8 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  *
@@ -36,17 +46,67 @@ import java.net.URLConnection;
  */
 @Controller
 public class ValueLightController {
-     @RequestMapping(value = {"/ValueLight"}, method = RequestMethod.GET)
-    public void valueLight(HttpServletRequest request, HttpServletResponse response) {
-         try {
-             File fil = downloadExcel2();
-             Workbook workbook = Workbook.getWorkbook(new File("C:/Users/Carlos/Desktop/Pruebas/cipote.xls"));
+    
+    @Autowired
+    ValuesDayDAO valuesDayDAO;
+    
+    @Autowired
+    CarRateDAO carRateDAO;
+    
+    @Autowired
+    NightRateDAO nightRateDAO;
+    
+    @Autowired
+    NormalRateDAO normalRateDAO;
+    
+    
+     @RequestMapping(value = {"/valueLight/{fecha}"}, method = RequestMethod.GET)
+    public void valueLight(HttpServletRequest request, HttpServletResponse response,@PathVariable("fecha") String fechaStr) {
+        
+        
+        int date;
+        String hours[] = {"00:00-01:00","01:00-02:00","02:00-03:00","03:00-04:00","04:00-05:00","05:00-06:00",
+            "06:00-07:00","07:00-08:00","08:00-09:00","09:00-10:00","10:00-11:00","11:00-12:00","12:00-13:00",
+            "13:00-14:00","14:00-15:00","15:00-16:00","16:00-17:00","17:00-18:00","18:00-19:00","19:00-20:00",
+            "20:00-21:00","21:00-22:00","22:00-23:00","23:00-00:00"};
+        
+        try {
+             downloadExcel(fechaStr);//Formato yyyymmdd
+             date = parseDate(fechaStr);
+             Workbook workbook = Workbook.getWorkbook(new File("C:/Users/Carlos/Desktop/Pruebas/excelDay.xls"));
              Sheet sheet = workbook.getSheet(0);
-             Cell a1 = sheet.getCell(0,0);
-             Cell b2 = sheet.getCell(1,1);
-             Cell c2 = sheet.getCell(2,1);
-             String stringa1 = a1.getContents(); 
-             System.out.println(stringa1);
+             ValuesDay day = new ValuesDay();
+             day.setId_day(date);
+             valuesDayDAO.insert(day);
+             
+             for(int i=5;i<29;i++){
+                NormalRate normal = new NormalRate();
+                normal.setDay(day);
+                normal.setHour(hours[i-5]);
+                Cell normalCell = sheet.getCell(4,i);
+                String val = normalCell.getContents();
+                normal.setValue(parseInt(val));
+                normalRateDAO.insert(normal);       
+             }
+             for(int i=29;i<53;i++){
+                NightRate night = new NightRate();
+                night.setDay(day);
+                night.setHour(hours[i-29]);
+                Cell nightCell = sheet.getCell(4,i);
+                String val = nightCell.getContents();
+                night.setValue(parseInt(val));
+                nightRateDAO.insert(night);       
+             }
+             for(int i=53;i<77;i++){
+                CarRate car = new CarRate();
+                car.setDay(day);
+                car.setHour(hours[i-53]);
+                Cell carCell = sheet.getCell(4,i);
+                String val = carCell.getContents();
+                car.setValue(parseInt(val));
+                carRateDAO.insert(car);       
+             }        
+             workbook.close();
          } catch (IOException ex) {
              Logger.getLogger(ValueLightController.class.getName()).log(Level.SEVERE, null, ex);
          } catch (BiffException ex) {
@@ -54,61 +114,25 @@ public class ValueLightController {
          }
     }
 
-private File downloadExcel(){
-URL url;
- 
-		try {
-			// get URL content
-			url = new URL("http://www.esios.ree.es/Solicitar?fileName=PVPC_DETALLE_DD_20140529&fileType=xls&idioma=es");
-			URLConnection conn = url.openConnection();
- 
-			// open the stream and put it into BufferedReader
-			BufferedReader br = new BufferedReader(
-                               new InputStreamReader(conn.getInputStream()));
- 
-			String inputLine;
- 
-			//save to this filename
-			String fileName = "C:/Users/Carlos/Desktop/Pruebas/cipote30.xls";
-			File file = new File(fileName);
- 
-			if (!file.exists()) {
-				file.createNewFile();
-			}
- 
-			//use FileWriter to write file
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
- 
-			while ((inputLine = br.readLine()) != null) {
-				bw.write(inputLine);
-			}
- 
-			bw.close();
-			br.close();
- 
-			System.out.println("Done");
-                        fw.close();
-                        return file;
- 
-		} catch (MalformedURLException e) {
-		} catch (IOException e) {
-		}
-                
-                return null;
-	}
 
-private File downloadExcel2(){
-URL url;
- 
-		try {
+
+    private Double parseInt(String val) {
+        String num = val.replace(',', '.');
+        return Double.parseDouble(num);
+    }
+    
+    private void downloadExcel(String fechaStr) throws MalformedURLException, IOException{
+        URL url;
+        String dir = "C:/Users/Carlos/Desktop/Pruebas/excelDay.xls";
+
 			// get URL content
-			url = new URL("http://www.esios.ree.es/Solicitar?fileName=PVPC_DETALLE_DD_20140527&fileType=xls&idioma=es");
+			url = new URL("http://www.esios.ree.es/Solicitar?fileName=PVPC_DETALLE_DD_"+fechaStr+ "&fileType=xls&idioma=es");
 			URLConnection conn = url.openConnection();
                         InputStream is = conn.getInputStream();
 
                         // Fichero en el que queremos guardar el contenido
-                        File salida = new File("C:/Users/Carlos/Desktop/Pruebas/cipote27.xls");
+                        
+                        File salida = new File(dir);
                         FileOutputStream fos;
     
                         fos = new FileOutputStream(salida);
@@ -125,16 +149,17 @@ URL url;
 
                         // Cierre de conexion y fichero.
                         is.close();
-                        fos.close();
-                        return salida;
-                
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(ValueLightController.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(ValueLightController.class.getName()).log(Level.SEVERE, null, ex);
-         }
-                return null;
+                        fos.close();                
                 }
+
+    private int parseDate(String fechaStr){
+        String year = fechaStr.substring(0, 4);
+        String month = fechaStr.substring(4, 6);
+        String day = fechaStr.substring(6, 8);
+        String resString = day+month+year;
+        int resInt = Integer.parseInt(resString);
+        return resInt;
+    }
 
                 
 			

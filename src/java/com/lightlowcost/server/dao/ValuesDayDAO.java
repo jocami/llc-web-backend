@@ -29,6 +29,7 @@ package com.lightlowcost.server.dao;
 
 import com.lightlowcost.persistence.dao.GenericDAO;
 import com.lightlowcost.server.domain.ValuesDay;
+import java.util.List;
 
 /**
 * @author JOCAMI
@@ -37,23 +38,11 @@ import com.lightlowcost.server.domain.ValuesDay;
 */
 public interface ValuesDayDAO extends GenericDAO<ValuesDay, Integer>{
 
-   /*
-    * PROPERTIES
-    */
-
-   
-   /*
-    * CONSTRUCTOR EMPTY
-    */
-   
-
-   /*
-    * CONSTRUCTOR OVERLOADED
-    */
-   
-   
-   /**********************
-    * GETTERS AND SETTERS
-    **********************/
+    /**
+     *
+     * @param fecha
+     * @return
+     */
+    public List<ValuesDay> findByName(String fecha);
 
 }

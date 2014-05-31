@@ -32,6 +32,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -54,9 +56,10 @@ public class CarRate implements Serializable{
     private String hour;
     
     @Column(name = "value")
-    private Integer value;
+    private Double value;
     
-    @Column(name = "id_day")
+    @ManyToOne
+    @JoinColumn(name="id_day")
     private ValuesDay day;
     /*
      * CONSTRUCTOR EMPTY
@@ -85,11 +88,11 @@ public class CarRate implements Serializable{
         this.hour = hour;
     }
 
-    public Integer getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 
