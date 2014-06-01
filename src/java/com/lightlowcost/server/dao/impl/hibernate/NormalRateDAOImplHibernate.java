@@ -29,7 +29,11 @@ package com.lightlowcost.server.dao.impl.hibernate;
 
 import com.lightlowcost.persistence.dao.impl.GenericDAOImplHibernate;
 import com.lightlowcost.server.dao.NormalRateDAO;
+import com.lightlowcost.server.domain.NightRate;
 import com.lightlowcost.server.domain.NormalRate;
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
 * @author JOCAMI
@@ -38,23 +42,33 @@ import com.lightlowcost.server.domain.NormalRate;
 */
 public class NormalRateDAOImplHibernate extends GenericDAOImplHibernate<NormalRate, Integer> implements NormalRateDAO{
 
-   /*
-    * PROPERTIES
-    */
+    @Override
+    public List<NormalRate> findByDate(int date) {
+        if (date == 0) {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Query query = session.createQuery("SELECT normalrate FROM Normalrate normalrate");
+
+            List<NormalRate> normalRate = query.list();
+
+            return normalRate;
+
+        } else {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Query query = session.createQuery("SELECT normalrate FROM Normalrate normalrate WHERE id_day = ?");
+            
+            query.setInteger(0,date);
+            
+            List<NormalRate> normalRate = query.list();
+            
+            return normalRate;
+            
+        }
+         }
 
    
-   /*
-    * CONSTRUCTOR EMPTY
-    */
-   
-
-   /*
-    * CONSTRUCTOR OVERLOADED
-    */
-   
-   
-   /**********************
-    * GETTERS AND SETTERS
-    **********************/
 
 }

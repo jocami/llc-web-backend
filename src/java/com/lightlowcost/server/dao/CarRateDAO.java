@@ -29,6 +29,7 @@ package com.lightlowcost.server.dao;
 
 import com.lightlowcost.persistence.dao.GenericDAO;
 import com.lightlowcost.server.domain.CarRate;
+import java.util.List;
 
 /**
 * @author JOCAMI
@@ -37,23 +38,7 @@ import com.lightlowcost.server.domain.CarRate;
 */
 public interface CarRateDAO extends GenericDAO<CarRate, Integer>{
 
-   /*
-    * PROPERTIES
-    */
-
-   
-   /*
-    * CONSTRUCTOR EMPTY
-    */
-   
-
-   /*
-    * CONSTRUCTOR OVERLOADED
-    */
-   
-   
-   /**********************
-    * GETTERS AND SETTERS
-    **********************/
+    public List<CarRate> findByDate(int date);
+    public boolean findByDateBool(int date);
 
 }

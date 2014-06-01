@@ -30,6 +30,7 @@ package com.lightlowcost.server.dao.impl.hibernate;
 import com.lightlowcost.persistence.dao.impl.GenericDAOImplHibernate;
 import com.lightlowcost.server.dao.ValuesDayDAO;
 import com.lightlowcost.server.domain.ValuesDay;
+import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -40,9 +41,9 @@ import org.hibernate.Session;
 */
 public class ValuesDayDAOImplHibernate extends GenericDAOImplHibernate<ValuesDay, Integer> implements ValuesDayDAO{
     @Override
-    public ValuesDay findById(int fecha) {
+    public ValuesDay findByDate(int date) {
         
-        if (fecha == 0) {
+        if (date == 0) {
 
             Session session = sessionFactory.getCurrentSession();
 
@@ -58,7 +59,7 @@ public class ValuesDayDAOImplHibernate extends GenericDAOImplHibernate<ValuesDay
 
             Query query = session.createQuery("SELECT valuesday FROM ValuesDay valuesday  WHERE id_valuesday = ?");
             
-            query.setInteger(0,fecha);
+            query.setInteger(0,date);
             
             ValuesDay valuesDay = (ValuesDay) query.uniqueResult();
             
@@ -66,5 +67,43 @@ public class ValuesDayDAOImplHibernate extends GenericDAOImplHibernate<ValuesDay
             
         }
     }
+    
+    @Override
+    public boolean findByDateBool(int date){
+    boolean value = true;
+        if (date == 0) {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Query query = session.createQuery("SELECT valuesDay FROM ValuesDay valuesday");
+
+            List<ValuesDay> valuesDay = query.list();
+
+            if (valuesDay.isEmpty() || valuesDay==null){
+            
+                value = false;
+            }
+            
+            return value;
+
+        } else {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Query query = session.createQuery("SELECT valuesday FROM ValuesDay valuesday  WHERE id_valuesday = ?");
+            
+            query.setInteger(0,date);
+            
+            List<ValuesDay> valuesDay = query.list();
+
+            if (valuesDay.isEmpty() || valuesDay==null){
+            
+                value = false;
+            }
+            
+            return value;
+            
+          }
+     }
 
 }

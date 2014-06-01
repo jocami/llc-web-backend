@@ -30,6 +30,9 @@ package com.lightlowcost.server.dao.impl.hibernate;
 import com.lightlowcost.persistence.dao.impl.GenericDAOImplHibernate;
 import com.lightlowcost.server.dao.CarRateDAO;
 import com.lightlowcost.server.domain.CarRate;
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
 * @author JOCAMI
@@ -37,24 +40,70 @@ import com.lightlowcost.server.domain.CarRate;
 * @since 1.0
 */
 public class CarRateDAOImplHibernate extends GenericDAOImplHibernate<CarRate, Integer> implements CarRateDAO{
+    public List<CarRate> findByDate(int date) {
+        
+        if (date == 0) {
 
-   /*
-    * PROPERTIES
-    */
+            Session session = sessionFactory.getCurrentSession();
 
-   
-   /*
-    * CONSTRUCTOR EMPTY
-    */
-   
+            Query query = session.createQuery("SELECT carrate FROM CarRate carrate");
 
-   /*
-    * CONSTRUCTOR OVERLOADED
-    */
-   
-   
-   /**********************
-    * GETTERS AND SETTERS
-    **********************/
+            List<CarRate> carRate = query.list();
 
+            return carRate;
+
+        } else {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Query query = session.createQuery("SELECT carrate FROM CarRate carrate  WHERE id_day = ?");
+            
+            query.setInteger(0,date);
+            
+            List<CarRate> carRate = query.list();
+            
+            return carRate;
+            
+        }
+    }
+
+    @Override
+    public boolean findByDateBool(int date) {
+        boolean value = true;
+        if (date == 0) {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Query query = session.createQuery("SELECT carrate FROM CarRate carrate");
+
+            List<CarRate> carRate = query.list();
+
+            if (carRate.isEmpty() || carRate==null){
+            
+                value = false;
+            }
+            
+            return value;
+
+        } else {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Query query = session.createQuery("SELECT carrate FROM CarRate carrate  WHERE id_day = ?");
+            
+            query.setInteger(0,date);
+            
+            List<CarRate> carRate = query.list();
+
+            if (carRate.isEmpty() || carRate==null){
+            
+                value = false;
+            }
+            
+            return value;
+            
+        }
+    }
+
+    
 }

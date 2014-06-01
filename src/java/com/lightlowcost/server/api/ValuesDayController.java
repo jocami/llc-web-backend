@@ -54,11 +54,10 @@ public class ValuesDayController {
     public void get(HttpServletRequest request, HttpServletResponse response, @PathVariable("fecha")String fechaStr) {
 
         try {
+            
             int dateInt = Integer.parseInt(fechaStr);
-            ValuesDay valuesDayRead = valuesDayDAO.findById(dateInt);
-
-            if (valuesDayRead != null) {
-
+            if (valuesDayDAO.findByDateBool(dateInt)) {
+                ValuesDay valuesDayRead = valuesDayDAO.findByDate(dateInt);
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json; chaset=UTF-8");
                 
@@ -71,6 +70,7 @@ public class ValuesDayController {
                 
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.setContentType("application/json; chaset=UTF-8");
+                response.getWriter().println("Date not found");
                 
                 //BussinesMessage mensaje = new BussinesMessage();
                 //mensaje.setMensaje("No se ha encontrado ningun empleado para actualizar.");

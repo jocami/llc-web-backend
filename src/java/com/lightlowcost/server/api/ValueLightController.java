@@ -64,60 +64,61 @@ public class ValueLightController {
             "13:00-14:00","14:00-15:00","15:00-16:00","16:00-17:00","17:00-18:00","18:00-19:00","19:00-20:00",
             "20:00-21:00","21:00-22:00","22:00-23:00","23:00-00:00"};
         date = Integer.parseInt(fechaStr);
-        ValuesDay valuesDay = valuesDayDAO.findById(date);
+        
         try {
-             if(valuesDay==null){ 
-             downloadExcel(fechaStr);//Formato yyyymmdd
-             Workbook workbook = Workbook.getWorkbook(new File("C:/Users/Carlos/Desktop/Pruebas/excelDay.xls"));
-             Sheet sheet = workbook.getSheet(0);
-             ValuesDay day = new ValuesDay();
-             day.setId_valuesday(date);
-             List<NormalRate> normals = new ArrayList();
-             List<CarRate> cars = new ArrayList();
-             List<NightRate> nights = new ArrayList();
-             
-             for(int i=5;i<29;i++){
-                NormalRate normal = new NormalRate();
-                normal.setDay(day);
-                normal.setHour(hours[i-5]);
-                Cell normalCell = sheet.getCell(4,i);
-                String val = normalCell.getContents();
-                normal.setValue(parseInt(val));
-                normals.add(normal);
-                normalRateDAO.insert(normal);       
+             if(!valuesDayDAO.findByDateBool(date)){ 
+                ValuesDay valuesDay = valuesDayDAO.findByDate(date);
+                downloadExcel(fechaStr);//Formato yyyymmdd
+                Workbook workbook = Workbook.getWorkbook(new File("C:/Users/Carlos/Desktop/Pruebas/excelDay.xls"));
+                Sheet sheet = workbook.getSheet(0);
+                ValuesDay day = new ValuesDay();
+                day.setId_valuesday(date);
+                List<NormalRate> normals = new ArrayList();
+                List<CarRate> cars = new ArrayList();
+                List<NightRate> nights = new ArrayList();
+
+                for(int i=5;i<29;i++){
+                   NormalRate normal = new NormalRate();
+                   normal.setDay(day);
+                   normal.setHour(hours[i-5]);
+                   Cell normalCell = sheet.getCell(4,i);
+                   String val = normalCell.getContents();
+                   normal.setValue(parseInt(val));
+                   normals.add(normal);
+                   normalRateDAO.insert(normal);       
+                }
+                for(int i=29;i<53;i++){
+                   NightRate night = new NightRate();
+                   night.setDay(day);
+                   night.setHour(hours[i-29]);
+                   Cell nightCell = sheet.getCell(4,i);
+                   String val = nightCell.getContents();
+                   night.setValue(parseInt(val));
+                   nights.add(night);
+                   nightRateDAO.insert(night);       
+                }
+                for(int i=53;i<77;i++){
+                   CarRate car = new CarRate();
+                   car.setDay(day);
+                   car.setHour(hours[i-53]);
+                   Cell carCell = sheet.getCell(4,i);
+                   String val = carCell.getContents();
+                   car.setValue(parseInt(val));
+                   cars.add(car);
+                   carRateDAO.insert(car);                
+                }
+                day.setCarRate(cars);
+                day.setNightRate(nights);
+                day.setNormalRate(normals);
+                valuesDayDAO.insert(day);
+                workbook.close();
+
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("application/json; chaset=UTF-8");
+                response.getWriter().println("Values save like id-valueday = " + String.valueOf(date));
              }
-             for(int i=29;i<53;i++){
-                NightRate night = new NightRate();
-                night.setDay(day);
-                night.setHour(hours[i-29]);
-                Cell nightCell = sheet.getCell(4,i);
-                String val = nightCell.getContents();
-                night.setValue(parseInt(val));
-                nights.add(night);
-                nightRateDAO.insert(night);       
-             }
-             for(int i=53;i<77;i++){
-                CarRate car = new CarRate();
-                car.setDay(day);
-                car.setHour(hours[i-53]);
-                Cell carCell = sheet.getCell(4,i);
-                String val = carCell.getContents();
-                car.setValue(parseInt(val));
-                cars.add(car);
-                carRateDAO.insert(car);                
-             }
-             day.setCarRate(cars);
-             day.setNightRate(nights);
-             day.setNormalRate(normals);
-             valuesDayDAO.insert(day);
-             workbook.close();
-             
-             response.setStatus(HttpServletResponse.SC_OK);
-             response.setContentType("application/json; chaset=UTF-8");
-             response.getWriter().println("Values save like id-valueday = " + String.valueOf(date));
-          }
         else{
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.setStatus(HttpServletResponse.SC_ACCEPTED);
                 response.setContentType("application/json; chaset=UTF-8");
                 response.getWriter().println("Already exists id-valueday = " + String.valueOf(date));
         

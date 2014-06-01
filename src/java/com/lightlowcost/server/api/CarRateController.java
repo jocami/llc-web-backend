@@ -27,11 +27,52 @@
 
 package com.lightlowcost.server.api;
 
+import com.lightlowcost.server.dao.CarRateDAO;
+import com.lightlowcost.server.dao.ValuesDayDAO;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 /**
 * @author JOCAMI
 * @version 1.0
 * @since 1.0
 */
+
+@Controller
 public class CarRateController {
+
     
+    @Autowired
+    CarRateDAO carRateDAO;
+    
+     @RequestMapping(value = {"/valuesCarDay/{fecha}"}, method = RequestMethod.GET)
+    public void get(HttpServletRequest request, HttpServletResponse response, @PathVariable("fecha")String fechaStr) {
+        int dateInt = Integer.parseInt(fechaStr);
+         
+        try {
+            if (carRateDAO.findByDateBool(dateInt)){
+           
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("application/json; chaset=UTF-8");
+                response.getWriter().println("Existe");
+            
+          }
+        else{
+            
+                response.setStatus(HttpServletResponse.SC_ACCEPTED );
+                response.setContentType("application/json; chaset=UTF-8");
+                response.getWriter().println("No existe");
+        }
+            } catch (IOException ex) {
+                Logger.getLogger(CarRateController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+    }
 }

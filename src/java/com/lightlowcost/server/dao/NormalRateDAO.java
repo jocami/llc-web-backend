@@ -29,6 +29,7 @@ package com.lightlowcost.server.dao;
 
 import com.lightlowcost.persistence.dao.GenericDAO;
 import com.lightlowcost.server.domain.NormalRate;
+import java.util.List;
 
 /**
 * @author JOCAMI
@@ -37,23 +38,6 @@ import com.lightlowcost.server.domain.NormalRate;
 */
 public interface NormalRateDAO extends GenericDAO<NormalRate, Integer>{
 
-   /*
-    * PROPERTIES
-    */
-
-   
-   /*
-    * CONSTRUCTOR EMPTY
-    */
-   
-
-   /*
-    * CONSTRUCTOR OVERLOADED
-    */
-   
-   
-   /**********************
-    * GETTERS AND SETTERS
-    **********************/
+    public List<NormalRate> findByDate(int date);
 
 }

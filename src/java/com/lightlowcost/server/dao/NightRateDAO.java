@@ -29,6 +29,7 @@ package com.lightlowcost.server.dao;
 
 import com.lightlowcost.persistence.dao.GenericDAO;
 import com.lightlowcost.server.domain.NightRate;
+import java.util.List;
 
 /**
 * @author JOCAMI
@@ -37,23 +38,7 @@ import com.lightlowcost.server.domain.NightRate;
 */
 public interface NightRateDAO extends GenericDAO<NightRate, Integer>{
 
-   /*
-    * PROPERTIES
-    */
+       public List<NightRate> findByDate(int date);
 
-   
-   /*
-    * CONSTRUCTOR EMPTY
-    */
-   
-
-   /*
-    * CONSTRUCTOR OVERLOADED
-    */
-   
-   
-   /**********************
-    * GETTERS AND SETTERS
-    **********************/
 
 }

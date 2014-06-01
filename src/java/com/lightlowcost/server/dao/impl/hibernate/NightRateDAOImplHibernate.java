@@ -30,6 +30,9 @@ package com.lightlowcost.server.dao.impl.hibernate;
 import com.lightlowcost.persistence.dao.impl.GenericDAOImplHibernate;
 import com.lightlowcost.server.dao.NightRateDAO;
 import com.lightlowcost.server.domain.NightRate;
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 /**
 * @author JOCAMI
@@ -38,23 +41,33 @@ import com.lightlowcost.server.domain.NightRate;
 */
 public class NightRateDAOImplHibernate extends GenericDAOImplHibernate<NightRate, Integer> implements NightRateDAO{
 
-   /*
-    * PROPERTIES
-    */
+    @Override
+    public List<NightRate> findByDate(int date) {
+       if (date == 0) {
 
-   
-   /*
-    * CONSTRUCTOR EMPTY
-    */
-   
+            Session session = sessionFactory.getCurrentSession();
 
-   /*
-    * CONSTRUCTOR OVERLOADED
-    */
-   
-   
-   /**********************
-    * GETTERS AND SETTERS
-    **********************/
+            Query query = session.createQuery("SELECT nightrate FROM NightRate nightrate");
+
+            List<NightRate> nightRate = query.list();
+
+            return nightRate;
+
+        } else {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            Query query = session.createQuery("SELECT nightrate FROM NightRate nightrate WHERE id_day = ?");
+            
+            query.setInteger(0,date);
+            
+            List<NightRate> nightRate = query.list();
+            
+            return nightRate;
+            
+        }
+    }
+
+
 
 }
